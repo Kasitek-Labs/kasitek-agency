@@ -1,0 +1,26 @@
+[workspace]
+members = ["kasitek-tenants"]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+version = "0.1.0"
+
+[workspace.dependencies]
+actix-cors = "0.7"
+actix-web = "4"
+chrono = { version = "0.4", features = ["serde"] }
+dotenv = "0.15"
+log = "0.4"
+observability = { path = "crates/observability" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sqlx = { version = "0.8", features = ["postgres", "runtime-tokio-native-tls", "chrono", "json"] }
+thiserror = "2"
+tokio = { version = "1", features = ["full"] }
+
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false
