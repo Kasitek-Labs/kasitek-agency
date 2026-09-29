@@ -13,6 +13,7 @@ mod error;
 mod mail;
 mod middleware;
 mod routes;
+mod types;
 
 use config::AppConfig;
 

@@ -1,6 +1,6 @@
+use crate::types::HealthResponse;
 use actix_web::HttpResponse;
 use chrono::Utc;
-use types::HealthResponse;
 
 pub async fn root() -> HttpResponse {
     HttpResponse::Ok().json(HealthResponse {

@@ -23,7 +23,6 @@ serde_json.workspace = true
 sqlx.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
-types = { path = "../crates/types" }
 
 [[bin]]
 name = "kasitek-tenants"

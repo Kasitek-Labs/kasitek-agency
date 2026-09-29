@@ -25,15 +25,21 @@ The tenant service directly references these shared crates at `server/crates/` i
 | --- | --- | --- |
 | `analytics-producer` | `server/crates/analytics-producer` | path dependency |
 | `analytics-reporting` | `server/crates/analytics-reporting` | path dependency |
-| `config` | `server/crates/config` | path dependency |
+| `config` | `server/crates/config` | path dependency for generic helpers only |
 | `crypto-utils` | `server/crates/crypto-utils` | path dependency |
 | `observability` | `server/crates/observability` | workspace dependency |
-| `types` | `server/crates/types` | path dependency |
+
+The Tenant API's `TenantServerConfig` and `CookieSameSitePolicy` now live in
+`server/kasitek-tenants/src/config.rs`; the service continues to depend on the existing `config`
+crate only for generic environment, error, and origin helpers. Tenant context DTOs and the simple
+health response live in `server/kasitek-tenants/src/types.rs`, so the API no longer depends on the
+shared `types` crate.
 
 Agency issues #1 and #2 do not assign ownership of these shared crates to Agency. They remain
-outside this move; no copy or replacement dependency was invented. The new Rust workspace records
-the tenant package and its existing workspace settings, but a Cargo build remains blocked until
-these crate dependencies have an agreed destination or published boundary.
+outside this move; no copy or replacement dependency was invented. The existing `config` crate is
+still required temporarily for generic helpers. The new Rust workspace records the tenant package
+and its existing workspace settings, but Cargo metadata/build remains blocked until the remaining
+shared crate dependencies have an agreed destination or published boundary.
 
 The service's Analytics publisher also calls the Analytics ingestion API using
 `ANALYTICS_INGESTION_URL` and tenant publisher credentials. Its producer code and event contracts
@@ -76,6 +82,9 @@ cross-product journeys, apply migrations, or modify Growth.
   relocated unchanged.
 - Logs, metrics, dashboards, and alerts: not applicable; runtime instrumentation was not changed.
 - Documentation: this file and the repository README describe the new source layout and commands.
-- Validation: scoped package and structural checks are recorded in the implementation handoff.
+- Validation: touched Rust files pass rustfmt and ownership searches confirm no shared `types`
+  dependency remains. `cargo metadata --manifest-path server/Cargo.toml --format-version 1
+  --locked` remains blocked because `server/crates/analytics-producer/Cargo.toml` is absent in
+  Agency; the other shared dependencies remain unresolved as listed above. No build or tests ran.
 - Rollback: revert the destination source commit; Growth and production remain unchanged.
 - Post-release review: not applicable; this is not a release.

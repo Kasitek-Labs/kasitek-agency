@@ -6,7 +6,7 @@ use sqlx::FromRow;
 use std::collections::BTreeSet;
 use tokio::net::lookup_host;
 
-use crate::{error::AppError, middleware};
+use crate::{error::AppError, middleware, types::TenantAccessContext};
 
 #[derive(Debug, FromRow, Serialize)]
 struct WorkspaceRow {
@@ -139,7 +139,7 @@ async fn sync_workspace_custom_domain(
     Ok(())
 }
 
-fn require_workspace_admin(access: &types::TenantAccessContext) -> Result<(), AppError> {
+fn require_workspace_admin(access: &TenantAccessContext) -> Result<(), AppError> {
     middleware::require_tenant_roles(&access.tenant_user_roles, &["owner", "admin"])
 }
 
@@ -189,7 +189,7 @@ fn normalize_staff_email(value: &str) -> Result<String, AppError> {
 async fn issue_workspace_staff_invite(
     pool: &sqlx::PgPool,
     config: &crate::config::AppConfig,
-    access: &types::TenantAccessContext,
+    access: &TenantAccessContext,
     tenant_user_id: &str,
     email: &str,
 ) -> Result<serde_json::Value, AppError> {

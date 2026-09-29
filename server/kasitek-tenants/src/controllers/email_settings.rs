@@ -78,7 +78,7 @@ pub struct TestEmailRequest {
     to: String,
 }
 
-fn require_workspace_admin(access: &types::TenantAccessContext) -> Result<(), AppError> {
+fn require_workspace_admin(access: &crate::types::TenantAccessContext) -> Result<(), AppError> {
     middleware::require_tenant_roles(&access.tenant_user_roles, &["owner", "admin"])
 }
 
