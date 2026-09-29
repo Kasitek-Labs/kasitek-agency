@@ -83,8 +83,10 @@ cross-product journeys, apply migrations, or modify Growth.
 - Logs, metrics, dashboards, and alerts: not applicable; runtime instrumentation was not changed.
 - Documentation: this file and the repository README describe the new source layout and commands.
 - Validation: touched Rust files pass rustfmt and ownership searches confirm no shared `types`
-  dependency remains. `cargo metadata --manifest-path server/Cargo.toml --format-version 1
-  --locked` remains blocked because `server/crates/analytics-producer/Cargo.toml` is absent in
-  Agency; the other shared dependencies remain unresolved as listed above. No build or tests ran.
+  dependency remains. The Agency API workspace metadata remains blocked because shared crate paths
+  are absent; no API build or API tests ran. The portal passed a frozen dependency install,
+  typecheck, and production build under Node 22.22.2. `git diff --check` passed. Portal lint remains
+  deferred because the destination has no ESLint config and the attempted temporary config exposed
+  existing violations; see the source-move PR for the recorded commands and results.
 - Rollback: revert the destination source commit; Growth and production remain unchanged.
 - Post-release review: not applicable; this is not a release.
