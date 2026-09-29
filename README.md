@@ -23,7 +23,7 @@ The API command is:
 cargo run --manifest-path server/Cargo.toml -p kasitek-tenants
 ```
 
-The API source still depends on six shared Rust crates whose ownership is not settled. Cargo
+The API source still depends on five shared Rust crates whose ownership is not settled. Cargo
 checks cannot complete until those dependencies are made available to Agency; see
 [source boundaries](docs/source-boundaries.md).
 
