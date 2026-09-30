@@ -1,0 +1,29 @@
+[package]
+name = "kasitek-tenants"
+version.workspace = true
+edition.workspace = true
+default-run = "kasitek-tenants"
+
+[dependencies]
+actix-cors.workspace = true
+actix-web.workspace = true
+analytics-producer = { path = "../crates/analytics-producer" }
+analytics-reporting = { path = "../crates/analytics-reporting" }
+bcrypt = "0.15"
+chrono.workspace = true
+config = { path = "../crates/config" }
+crypto-utils = { path = "../crates/crypto-utils" }
+cuid2 = "0.1"
+dotenv.workspace = true
+log.workspace = true
+observability = { path = "../crates/observability" }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+serde.workspace = true
+serde_json.workspace = true
+sqlx.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+
+[[bin]]
+name = "kasitek-tenants"
+path = "src/main.rs"
