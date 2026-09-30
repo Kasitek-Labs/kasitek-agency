@@ -7,16 +7,16 @@ default-run = "kasitek-tenants"
 [dependencies]
 actix-cors.workspace = true
 actix-web.workspace = true
-analytics-producer = { path = "../crates/analytics-producer" }
-analytics-reporting = { path = "../crates/analytics-reporting" }
+analytics-producer.workspace = true
+analytics-reporting.workspace = true
 bcrypt = "0.15"
 chrono.workspace = true
-config = { path = "../crates/config" }
-crypto-utils = { path = "../crates/crypto-utils" }
+config.workspace = true
+crypto-utils.workspace = true
 cuid2 = "0.1"
 dotenv.workspace = true
 log.workspace = true
-observability = { path = "../crates/observability" }
+observability.workspace = true
 reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
 serde.workspace = true
 serde_json.workspace = true

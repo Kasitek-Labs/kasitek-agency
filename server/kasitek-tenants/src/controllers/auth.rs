@@ -42,9 +42,9 @@ pub struct TenantUserPayload {
 
 fn same_site(config: &AppConfig) -> SameSite {
     match config.session_cookie_same_site {
-        config::CookieSameSitePolicy::Lax => SameSite::Lax,
-        config::CookieSameSitePolicy::Strict => SameSite::Strict,
-        config::CookieSameSitePolicy::None => SameSite::None,
+        crate::config::CookieSameSitePolicy::Lax => SameSite::Lax,
+        crate::config::CookieSameSitePolicy::Strict => SameSite::Strict,
+        crate::config::CookieSameSitePolicy::None => SameSite::None,
     }
 }
 

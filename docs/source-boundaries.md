@@ -17,17 +17,17 @@ The Growth portal's tracked `client/apps/tenant-portal/dist/` files were not cop
 authorizes the portal source and assets but does not authorize generated build output. The authored
 favicon and Open Graph image under `public/` were copied.
 
-## Unresolved Rust dependencies
+## Shared Rust dependencies
 
 The tenant service directly references these shared crates at `server/crates/` in Growth:
 
-| Crate | Current source path | Tenant API manifest edge |
+| Crate | Original Growth source path | Tenant API manifest edge |
 | --- | --- | --- |
-| `analytics-producer` | `server/crates/analytics-producer` | path dependency |
-| `analytics-reporting` | `server/crates/analytics-reporting` | path dependency |
-| `config` | `server/crates/config` | path dependency for generic helpers only |
-| `crypto-utils` | `server/crates/crypto-utils` | path dependency |
-| `observability` | `server/crates/observability` | workspace dependency |
+| `analytics-producer` | `server/crates/analytics-producer` | private Git dependency from Labs |
+| `analytics-reporting` | `server/crates/analytics-reporting` | private Git dependency from Labs |
+| `config` | `server/crates/config` | private Git dependency for generic helpers only |
+| `crypto-utils` | `server/crates/crypto-utils` | private Git dependency from Labs |
+| `observability` | `server/crates/observability` | private Git dependency from Labs |
 
 The Tenant API's `TenantServerConfig` and `CookieSameSitePolicy` now live in
 `server/kasitek-tenants/src/config.rs`; the service continues to depend on the existing `config`
@@ -35,15 +35,18 @@ crate only for generic environment, error, and origin helpers. Tenant context DT
 health response live in `server/kasitek-tenants/src/types.rs`, so the API no longer depends on the
 shared `types` crate.
 
-Agency issues #1 and #2 do not assign ownership of these shared crates to Agency. They remain
-outside this move; no copy or replacement dependency was invented. The existing `config` crate is
-still required temporarily for generic helpers. The new Rust workspace records the tenant package
-and its existing workspace settings, but Cargo metadata/build remains blocked until the remaining
-shared crate dependencies have an agreed destination or published boundary.
+These generic crates remain Labs-owned and are consumed from its private Git repository at the
+immutable tag `rust-crates-v0.1.0`. They are not published to a public crate registry. Cargo records
+the selected revision in `server/Cargo.lock`. The `config` crate is
+still used only for generic helpers; tenant-specific settings remain in the Agency service.
+Building Agency requires read access to the private Labs repository, so local contributors and any
+trusted build environment need credentials with that access. Credentials must stay outside the
+repository.
 
-The service's Analytics publisher also calls the Analytics ingestion API using
-`ANALYTICS_INGESTION_URL` and tenant publisher credentials. Its producer code and event contracts
-were moved unchanged; no Analytics service or shared producer crate was copied.
+The service's Analytics publisher calls the Analytics ingestion API using
+`ANALYTICS_INGESTION_URL` and tenant publisher credentials. It uses the Labs-owned
+`analytics-producer` library for the shared event contract, outbox operations, and authenticated HTTP
+client; no Analytics service source was copied into Agency.
 
 ## Portal and Growth integration points
 
@@ -83,8 +86,8 @@ cross-product journeys, apply migrations, or modify Growth.
 - Logs, metrics, dashboards, and alerts: not applicable; runtime instrumentation was not changed.
 - Documentation: this file and the repository README describe the new source layout and commands.
 - Validation: touched Rust files pass rustfmt and ownership searches confirm no shared `types`
-  dependency remains. The Agency API workspace metadata remains blocked because shared crate paths
-  are absent; no API build or API tests ran. The portal passed a frozen dependency install,
+  dependency remains. Cargo metadata resolves the private Labs crate dependencies and locks their
+  source revision in `server/Cargo.lock`; no API build or API tests ran. The portal passed a frozen dependency install,
   typecheck, and production build under Node 22.22.2. `git diff --check` passed. Portal lint remains
   deferred because the destination has no ESLint config and the attempted temporary config exposed
   existing violations; see the source-move PR for the recorded commands and results.
